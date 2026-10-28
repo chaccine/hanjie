@@ -1,50 +1,284 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111614"><meta name="description" content="一方工作台，一次专注的焊接。练习温度、送锡与时间的平衡。">
-<title>焊接大师 · 精密焊接工作台</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="app">
-<header class="topbar">
- <div class="brand"><div class="brand-icon">焊</div><div><h1>焊接大师<span>⌁</span></h1><p>专注每一个连接</p></div></div>
- <div class="level"><span class="eyebrow">基础练习 / 01</span><strong>第一块电路板</strong></div>
- <div class="top-progress"><div><span>焊接进度</span><strong id="count">0 / 6</strong></div><div class="track"><i id="progress"></i></div></div>
- <div class="stat"><span>用时</span><strong id="timer">00:00</strong></div>
- <div class="stat"><span>得分</span><strong id="score">0000</strong></div>
- <div class="stat combo"><span>连续完美</span><strong id="combo">0<span> 连击</span></strong></div>
- <button id="sound" class="icon-button" aria-label="关闭声音" title="声音开关">♫</button>
- <button id="reset" class="reset-button">↻ <span>重新开始</span></button>
-</header>
-<main class="workbench">
- <aside class="left-panel">
-  <div class="panel-heading"><span class="status-dot"></span> 温度监测 <span class="small">实时</span></div>
-  <div class="temperature-number"><strong id="temperature">25</strong><span>°C</span></div><div class="temperature-caption" id="temp-caption">焊盘温度 · 待加热</div>
-  <div class="thermometer"><div class="thermo-tube"><div class="ideal-zone"></div><div id="mercury"></div><div class="tube-shine"></div></div><div class="temp-ticks"><span>450°</span><span>400°</span><span>350°</span><span>300°</span><span>250°</span><span>200°</span><span>100°</span><span>25°</span></div><div class="ideal-label">最佳温区<br><b>300–360°C</b></div></div>
-  <div class="temp-legend"><i></i> 稳定温度，充分润湿</div>
-  <div class="station-note"><span>工作台状态</span><strong><i class="status-dot"></i> 已就绪</strong><p>恒温烙铁 · 无铅焊锡<br>练习模式 / 不限时</p></div>
- </aside>
- <section class="stage" aria-label="焊接练习区域">
-  <canvas id="game" tabindex="0" aria-label="练习电路板，移动烙铁到亮圈焊盘，按住左键加热，右键或空格送锡"></canvas>
-  <div class="stage-label"><span class="tiny-square"></span> 精密焊接工作台 <span class="muted">/</span> <span class="muted">练习板 01</span></div>
-  <div class="board-caption"><span class="live-dot"></span> 六个焊点，一次专注的练习</div>
-  <div class="hint" id="hint"><span class="hint-index">01</span><div><strong id="hint-title">从一个亮圈焊盘开始</strong><p id="hint-text">移入烙铁，按住左键加热至 300°C</p></div></div>
-  <div class="quality-panel"><div class="quality-ring" id="quality-ring"><div><strong id="fill-percent">0<span>%</span></strong><span>锡量</span></div></div><div class="quality-copy"><span class="eyebrow">当前焊点 <b id="joint-name">等待选择</b></span><strong id="quality">准备焊接</strong><p id="quality-detail">耐心加热，让焊锡自然流动</p></div><div class="quality-meter"><span>建议锡量</span><div class="solder-track"><i id="solder-fill"></i><b></b></div><small>少量 <span>刚刚好</span> 过量</small></div></div>
-  <div class="touch-controls"><button id="heat-touch">♨ 按住加热</button><button id="feed-touch">＋ 按住送锡</button></div>
- </section>
- <aside class="right-panel">
-  <div class="panel-heading"><span class="tray-icon">◇</span> 元件托盘 <span class="small">已安装</span></div>
-  <p class="panel-subtitle">让每一个引脚，可靠连接。</p>
-  <div class="component-card"><div class="component-art resistor"><i></i></div><div><strong>碳膜电阻</strong><span>220 Ω · R1</span></div><b id="part-r1">0/2</b></div>
-  <div class="component-card"><div class="component-art resistor second"><i></i></div><div><strong>碳膜电阻</strong><span>1 kΩ · R2</span></div><b id="part-r2">0/2</b></div>
-  <div class="component-card"><div class="component-art led"><i></i></div><div><strong>发光二极管</strong><span>红色 · D1</span></div><b id="part-d1">0/2</b></div>
-  <div class="guide"><span class="eyebrow">一枚好焊点的诞生</span><div><b>01</b><p><strong>预热焊盘</strong><span>左键按住，进入绿色温区</span></p></div><div><b>02</b><p><strong>少量送锡</strong><span>保持加热，右键或空格送锡</span></p></div><div><b>03</b><p><strong>松手，等待冷却</strong><span>锡量合适后，松开所有按键</span></p></div></div>
-  <div class="tip"><span>✧</span><p>好焊点像一座小山。<br>银亮、内凹，恰到好处。</p></div>
- </aside>
-</main>
-<footer><div class="controls"><span><kbd>鼠标移动</kbd> 烙铁</span><span><kbd>左键</kbd> 加热</span><span><kbd>右键 / 空格</kbd> 送锡</span></div><span class="footer-note"><i class="status-dot"></i> 安全第一 · 精准焊接</span></footer>
-</div>
-<dialog id="summary"><form method="dialog"><span class="summary-symbol">✧</span><p class="eyebrow">练习完成</p><h2>每个连接，都有进步。</h2><p id="summary-copy"></p><div class="summary-stats"><div><strong id="final-score"></strong><span>总得分</span></div><div><strong id="final-perfect"></strong><span>完美焊点</span></div><div><strong id="final-time"></strong><span>练习用时</span></div></div><div id="result-list"></div><button id="restart" type="button">再练一块电路板 ↗</button></form></dialog>
-<script src="game.js"></script>
-</body></html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#111614" />
+    <meta
+      name="description"
+      content="一方工作台，一次专注的焊接。练习温度、送锡与时间的平衡。"
+    />
+    <title>焊接大师 · 精密焊接工作台</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section id="selection" class="selection-screen" aria-label="关卡选择">
+      <header class="selection-header">
+        <div class="brand">
+          <div class="brand-icon">焊</div>
+          <div>
+            <h1>焊接大师<span>⌁</span></h1>
+            <p>专注每一个连接</p>
+          </div>
+        </div>
+        <span class="edition">工作室手册 / 第二章</span
+        ><button id="sandbox-entry" class="outline-button">自由沙盒 ↗</button>
+      </header>
+      <div class="selection-hero">
+        <div>
+          <p class="eyebrow">从第一滴焊锡，到整块电路的心跳</p>
+          <h2>让连接，<em>亮起来。</em></h2>
+          <p>
+            预热、送锡、等待。把专注留在指尖，<br />让一枚好焊点，开启下一段旅程。
+          </p>
+        </div>
+        <div class="hero-board" aria-hidden="true">
+          <div class="hero-chip">焊<span>恒温 · 精密 · 专注</span></div>
+          <i></i><b>●</b><small>工作台已就绪 / 415°C</small>
+        </div>
+      </div>
+      <div class="curriculum-heading">
+        <h3>焊接课程 <span>九块电路板 · 循序渐进</span></h3>
+        <span id="saved-progress"></span>
+      </div>
+      <div id="level-grid" class="level-grid"></div>
+      <footer class="selection-footer">
+        <span><i class="status-dot"></i> 进度保存在此浏览器</span
+        ><span>鼠标与触屏均可操作 · 无需安装</span>
+      </footer>
+    </section>
+    <div class="app" id="workshop" hidden>
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-icon">焊</div>
+          <div>
+            <h1>焊接大师<span>⌁</span></h1>
+            <p>专注每一个连接</p>
+          </div>
+        </div>
+        <div class="level">
+          <span class="eyebrow">基础练习 / 01</span
+          ><strong>第一块电路板</strong>
+        </div>
+        <div class="top-progress">
+          <div><span>焊接进度</span><strong id="count">0 / 6</strong></div>
+          <div class="track"><i id="progress"></i></div>
+        </div>
+        <div class="stat">
+          <span>用时</span><strong id="timer">00:00</strong>
+        </div>
+        <div class="stat">
+          <span>得分</span><strong id="score">0000</strong>
+        </div>
+        <div class="stat combo">
+          <span>连续完美</span><strong id="combo">0<span> 连击</span></strong>
+        </div>
+        <button id="menu" class="reset-button" title="返回选关">选关</button>
+        <button
+          id="sound"
+          class="icon-button"
+          aria-label="关闭声音"
+          title="声音开关"
+        >
+          ♫
+        </button>
+        <button id="reset" class="reset-button">↻ <span>重新开始</span></button>
+      </header>
+      <div class="session-bar">
+        <p id="mission"></p>
+        <div class="audio-controls">
+          <button id="music" class="small-button" aria-pressed="true">
+            氛围音乐 开</button
+          ><label
+            >音量
+            <input
+              id="volume"
+              aria-label="音量"
+              type="range"
+              min="0"
+              max="100"
+              value="55"
+          /></label>
+        </div>
+      </div>
+      <div id="sandbox-tools" class="sandbox-tools" hidden>
+        <label
+          >元件
+          <select id="part-type" aria-label="元件类型"></select></label
+        ><button id="place-part" class="outline-button">放置元件</button
+        ><button id="cancel-place" class="small-button">取消放置</button
+        ><button id="clear-sandbox" class="small-button">清空电路板</button
+        ><span id="sandbox-message" role="status"
+          >选择元件后，点击板上空白处放置。</span
+        >
+      </div>
+      <main class="workbench">
+        <aside class="left-panel">
+          <div class="panel-heading">
+            <span class="status-dot"></span> 温度监测
+            <span class="small">实时</span>
+          </div>
+          <div class="temperature-number">
+            <strong id="temperature">25</strong><span>°C</span>
+          </div>
+          <div class="temperature-caption" id="temp-caption">
+            焊盘温度 · 待加热
+          </div>
+          <div class="thermometer">
+            <div class="thermo-tube">
+              <div class="ideal-zone"></div>
+              <div id="mercury"></div>
+              <div class="tube-shine"></div>
+            </div>
+            <div class="temp-ticks">
+              <span>450°</span><span>400°</span><span>350°</span
+              ><span>300°</span><span>250°</span><span>200°</span
+              ><span>100°</span><span>25°</span>
+            </div>
+            <div class="ideal-label">最佳温区<br /><b>300–360°C</b></div>
+          </div>
+          <div class="temp-legend"><i></i> 稳定温度，充分润湿</div>
+          <div class="station-note">
+            <span>工作台状态</span
+            ><strong><i class="status-dot"></i> 已就绪</strong>
+            <p>恒温烙铁 · 无铅焊锡<br />练习模式 / 不限时</p>
+          </div>
+        </aside>
+        <section class="stage" aria-label="焊接练习区域">
+          <canvas
+            id="game"
+            tabindex="0"
+            aria-label="练习电路板，移动烙铁到亮圈焊盘，按住左键加热，右键或空格送锡"
+          ></canvas>
+          <div class="stage-label">
+            <span class="tiny-square"></span> 精密焊接工作台
+            <span class="muted">/</span> <span class="muted">练习板 01</span>
+          </div>
+          <div class="board-caption">
+            <span class="live-dot"></span> 六个焊点，一次专注的练习
+          </div>
+          <div class="hint" id="hint">
+            <span class="hint-index">01</span>
+            <div>
+              <strong id="hint-title">从一个亮圈焊盘开始</strong>
+              <p id="hint-text">移入烙铁，按住左键加热至 300°C</p>
+            </div>
+          </div>
+          <div class="quality-panel">
+            <div class="quality-ring" id="quality-ring">
+              <div>
+                <strong id="fill-percent">0<span>%</span></strong
+                ><span>锡量</span>
+              </div>
+            </div>
+            <div class="quality-copy">
+              <span class="eyebrow"
+                >当前焊点 <b id="joint-name">等待选择</b></span
+              ><strong id="quality">准备焊接</strong>
+              <p id="quality-detail">耐心加热，让焊锡自然流动</p>
+            </div>
+            <div class="quality-meter">
+              <span>建议锡量</span>
+              <div class="solder-track"><i id="solder-fill"></i><b></b></div>
+              <small>少量 <span>刚刚好</span> 过量</small>
+            </div>
+          </div>
+          <div class="touch-controls">
+            <button id="heat-touch">♨ 按住加热</button
+            ><button id="feed-touch">＋ 按住送锡</button>
+          </div>
+        </section>
+        <aside class="right-panel">
+          <div class="panel-heading">
+            <span class="tray-icon">◇</span> 元件托盘
+            <span class="small">已安装</span>
+          </div>
+          <p class="panel-subtitle">让每一个引脚，可靠连接。</p>
+          <div id="component-tray"></div>
+          <div class="guide">
+            <span class="eyebrow">一枚好焊点的诞生</span>
+            <div>
+              <b>01</b>
+              <p>
+                <strong>预热焊盘</strong><span>左键按住，进入绿色温区</span>
+              </p>
+            </div>
+            <div>
+              <b>02</b>
+              <p>
+                <strong>少量送锡</strong><span>保持加热，右键或空格送锡</span>
+              </p>
+            </div>
+            <div>
+              <b>03</b>
+              <p>
+                <strong>松手，等待冷却</strong
+                ><span>锡量合适后，松开所有按键</span>
+              </p>
+            </div>
+          </div>
+          <div class="tip">
+            <span>✧</span>
+            <p>好焊点像一座小山。<br />银亮、内凹，恰到好处。</p>
+          </div>
+        </aside>
+      </main>
+      <footer>
+        <div class="controls">
+          <span><kbd>鼠标移动</kbd> 烙铁</span><span><kbd>左键</kbd> 加热</span
+          ><span><kbd>右键 / 空格</kbd> 送锡</span>
+        </div>
+        <span class="footer-note"
+          ><i class="status-dot"></i> 安全第一 · 精准焊接</span
+        >
+      </footer>
+    </div>
+    <dialog id="power-dialog" aria-labelledby="power-title">
+      <p class="eyebrow">质量检验 / 通电测试</p>
+      <h2 id="power-title">连接电源，等待电路苏醒。</h2>
+      <p id="power-caption">正在检查线路与电源保护</p>
+      <div class="power-devices">
+        <div id="test-led" class="test-device">
+          <div class="test-bulb"></div>
+          <strong>指示灯</strong><span>等待供电</span>
+        </div>
+        <div id="test-buzzer" class="test-device">
+          <div class="test-speaker">≋</div>
+          <strong>蜂鸣器</strong><span>等待供电</span>
+        </div>
+        <div id="test-motor" class="test-device">
+          <div class="motor-shell"><i class="motor-blades">✣</i></div>
+          <strong>小电机</strong><span>等待供电</span>
+        </div>
+      </div>
+      <div class="power-track"><i id="power-progress"></i></div>
+      <div id="power-reasons" role="status"></div>
+      <button id="view-result" class="primary-button" disabled>
+        测试进行中…
+      </button>
+    </dialog>
+    <dialog id="summary" aria-labelledby="result-title">
+      <span id="result-stars" class="summary-symbol">★★★</span>
+      <p class="eyebrow">焊接记录 / 本次交付</p>
+      <h2 id="result-title">电路已就绪。</h2>
+      <p id="summary-copy"></p>
+      <div class="summary-stats">
+        <div><strong id="final-score"></strong><span>综合评分 / 100</span></div>
+        <div><strong id="final-perfect"></strong><span>完美焊点</span></div>
+        <div><strong id="final-time"></strong><span>本关用时</span></div>
+      </div>
+      <div id="score-breakdown"></div>
+      <div id="result-list"></div>
+      <div class="result-actions">
+        <button id="restart" class="outline-button">重试本关</button
+        ><button id="next-level" class="primary-button">下一关 ↗</button
+        ><button id="result-menu" class="small-button">返回选关</button>
+      </div>
+    </dialog>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
